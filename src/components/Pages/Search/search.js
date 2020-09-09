@@ -60,6 +60,8 @@ const getStream = async(data) =>{
 
 	 const getSubStream = async(data) =>{
 		setLoader("true")
+		setSearch([])
+
 		 setSearchStream(data)
 		 await fetch(`https://api.odmit.com/api/v1/substream-list?stream=${data}`)
 		 .then((response)=>{
@@ -80,23 +82,22 @@ const getStream = async(data) =>{
 	 // third close
 			const getSearchData =async(data) =>{
 				setLoader("false")
-		
-
+				setSearch([])
 				let comp = "Oncampus";
-		
+
 				if(searchQul !== '' || searchStream !== '' || searchSubStream !== '' || data !== ''){
 					// document.getElementById('hide_show').style.display="block"
 						//   return false;
 
 						 await fetch(`https://api.odmit.com/api/v1/course-type-count?qualification=${searchQul}&stream=${searchStream}&sub_stream=${searchSubStream}&course_type=${comp}`)
-						 
+
 								 .then((response)=>{
 								 return response.json()
 						 })
 						 .then((res)=>{
 								//  console.log(res)
 									 setSearch(res.response.data)
-									
+
 						 })
 						.catch((error)=>{
 								console.log(error,"network error")
@@ -118,7 +119,7 @@ const getStream = async(data) =>{
 						setLoader("true")
 							setcourseType(data)
 							// let comp = data
-						
+
 						await fetch(`https://api.odmit.com/api/v1/country-course-count?qualification=${searchQul}&stream=${searchStream}&sub_stream=${searchSubStream}&course_type=${data}`)
 								.then((response)=>{
 								return response.json()
@@ -132,12 +133,13 @@ const getStream = async(data) =>{
 						 .finally(()=>{
 							setLoader("false")
 						})
-						
+
 					}
 
 
 		return(
 			<div className="session-page">
+			{console.log(search)}
 				<Loader loader={loader}/>
 				<div className="main-header">
 		           	<nav className="navbar navbar-expand-xl navbar-dark d-between">
@@ -186,7 +188,7 @@ const getStream = async(data) =>{
 										<option>Select subject</option>
 									{
 											substream.map((v,i)=>{
-										
+
 													if( v.length >= 0 || v.length == null ){
 															document.getElementById('show').style.display = "block"
 															return(
@@ -210,9 +212,9 @@ const getStream = async(data) =>{
 									<div className="d-flex-box" id="hide-show" style={{display:""}}>
 												{
 		                      search.map((v,i)=>{
-								  
+
 		                          return(
-									  
+
 									<div key={i} className="box-inline" onClick ={()=>getCountry(v.course_Type)}>
 																<a >
 																<span className="wrap" key={i}>
@@ -220,7 +222,7 @@ const getStream = async(data) =>{
 																<span className="d-block">{v.course_count}</span>
 																</span>
 																</a>
-																</div>							
+																</div>
 		                          )
 		                      })
 		                    }
@@ -228,14 +230,14 @@ const getStream = async(data) =>{
 								</div>
 								<div className="country-table">
 								{
-									country.map((v,i)=>{		
-                                              
+									country.map((v,i)=>{
+
 											return(
 												<div className="e-box" key={i}>
-													
+
 														<span className="d-block">{v.course_count}</span>
 														<button className="back" onClick={()=>props.history.push({pathname:"/coursecat",state:{searchQul:searchQul,searchStream:searchStream,searchSubStream:searchSubStream,courseType:courseType,countryName:`${v.country_name}`}})}><span className="d-block">{v.country_name}</span></button>
-													
+
 												</div>
 											)
 
